@@ -13,7 +13,7 @@ import (
 // where it works properly...
 func List(client *gophercloud.ServiceClient) pagination.Pager {
 	return pagination.NewPager(client, hypervisorsListDetailURL(client), func(r pagination.PageResult) pagination.Page {
-		return HypervisorPage{pagination.LinkedPageBase(r)}
+		return HypervisorPage{pagination.LinkedPageBase{PageResult: r}}
 	})
 }
 
