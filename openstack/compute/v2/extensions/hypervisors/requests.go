@@ -8,9 +8,12 @@ import (
 )
 
 // List makes a request against the API to list hypervisors.
+// TODO I bet the third argument here is wrong ... supposed to be a:
+// func(r PageResult) Page. Look at how createPage is implemented in places
+// where it works properly...
 func List(client *gophercloud.ServiceClient) pagination.Pager {
 	return pagination.NewPager(client, hypervisorsListDetailURL(client), func(r pagination.PageResult) pagination.Page {
-		return HypervisorPage{pagination.SinglePageBase(r)}
+		return HypervisorPage{pagination.LinkedPageBase(r)}
 	})
 }
 
