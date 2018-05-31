@@ -149,6 +149,8 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 	case string:
 		tmpb = []byte(t)
 	case map[string]interface{}:
+		fmt.Fprintln(os.Stderr, "trying to marshal this")
+		fmt.Fprintln(os.Stderr, t)
 		tmpb, err = json.Marshal(t)
 		if err != nil {
 			return err
