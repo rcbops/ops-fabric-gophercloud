@@ -53,8 +53,7 @@ func (r Result) ExtractInto(to interface{}) error {
 		}
 		return json.NewDecoder(reader).Decode(to)
 	}
-	fmt.Fprintln(os.Stderr, "Extracting the following result body")
-	fmt.Fprintln(os.Stderr, r.Body)
+	fmt.Fprintln(os.Stderr, "Extracting a result body")
 	b, err := json.Marshal(r.Body)
 	if err != nil {
 		return err

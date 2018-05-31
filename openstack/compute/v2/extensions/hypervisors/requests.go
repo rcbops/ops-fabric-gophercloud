@@ -16,8 +16,7 @@ import (
 func List(client *gophercloud.ServiceClient) pagination.Pager {
 	fmt.Fprintln(os.Stderr, "Listing hypervisors...")
 	return pagination.NewPager(client, hypervisorsListDetailURL(client), func(r pagination.PageResult) pagination.Page {
-		fmt.Fprintln(os.Stderr, "Constructing a hypervisor page from this pagination.PageResult:")
-		fmt.Fprintln(os.Stderr, r)
+		fmt.Fprintln(os.Stderr, "Constructing a hypervisor page")
 		return HypervisorPage{pagination.LinkedPageBase{PageResult: r}}
 	})
 }
