@@ -160,9 +160,13 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 	}
 	fmt.Fprintln(os.Stderr, "unmarshall cpu info")
 
-	err = json.Unmarshal(tmpb, &r.CPUInfo)
-	if err != nil {
-		return err
+	// leave CPUInfo empty if it doesn't exist. Some hypervisor types,
+	// like ironic "hypervisors", are missing cpu_info and get set to empty string
+	if len(tmpb) > 0 {
+		err = json.Unmarshal(tmpb, &r.CPUInfo)
+		if err != nil {
+			return err
+		}
 	}
 
 	fmt.Fprintln(os.Stderr, "get hyp version")
