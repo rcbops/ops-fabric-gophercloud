@@ -130,11 +130,13 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 		LocalGB           interface{} `json:"local_gb"`
 	}
 
+	fmt.Fprintln(os.Stderr, "unmarshalling general byte str")
 	err := json.Unmarshal(b, &s)
 	if err != nil {
 		return err
 	}
 
+	fmt.Fprintln(os.Stderr, "constructing hypervisor")
 	*r = Hypervisor(s.tmp)
 
 	// Newer versions return the CPU info as the correct type.
@@ -142,6 +144,7 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 	// unmarshalled by the json parser.
 	var tmpb []byte
 
+	fmt.Fprintln(os.Stderr, "get cpu info")
 	switch t := s.CPUInfo.(type) {
 	case string:
 		tmpb = []byte(t)
@@ -153,11 +156,14 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 	default:
 		return fmt.Errorf("CPUInfo has unexpected type: %T", t)
 	}
+	fmt.Fprintln(os.Stderr, "unmarshall cpu info")
 
 	err = json.Unmarshal(tmpb, &r.CPUInfo)
 	if err != nil {
 		return err
 	}
+
+	fmt.Fprintln(os.Stderr, "get hyp version")
 
 	// These fields may be returned as a scientific notation, so they need
 	// converted to int.
@@ -170,6 +176,8 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("Hypervisor version of unexpected type")
 	}
 
+	fmt.Fprintln(os.Stderr, "get free disk gb")
+
 	switch t := s.FreeDiskGB.(type) {
 	case int:
 		r.FreeDiskGB = t
@@ -178,6 +186,7 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 	default:
 		return fmt.Errorf("Free disk GB of unexpected type")
 	}
+	fmt.Fprintln(os.Stderr, "get local gb")
 
 	switch t := s.LocalGB.(type) {
 	case int:
