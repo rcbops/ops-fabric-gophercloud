@@ -204,6 +204,8 @@ func ExtractHypervisors(p pagination.Page) ([]Hypervisor, error) {
 		Hypervisors []Hypervisor `json:"hypervisors"`
 	}
 	fmt.Fprintln(os.Stderr, "Extracting a page of hypervisors...")
+	fmt.Fprintln(os.Stderr, "The page:")
+	fmt.Fprintln(os.Stderr, p)
 	err := (p.(HypervisorPage)).ExtractInto(&h)
 	return h.Hypervisors, err
 }
