@@ -220,14 +220,12 @@ func (r HypervisorPage) NextPageURL() (string, error) {
 
 // ExtractHypervisors interprets a page of results as a slice of Hypervisors.
 func ExtractHypervisors(p pagination.Page) ([]Hypervisor, error) {
-	var h struct {
-		Hypervisors []Hypervisor `json:"hypervisors"`
-	}
+	var h []Hypervisor
 	fmt.Fprintln(os.Stderr, "Extracting a page of hypervisors...")
 	fmt.Fprintln(os.Stderr, "The page:")
 	fmt.Fprintln(os.Stderr, p)
 	err := ExtractHypervisorsInto(p, &h)
-	return h.Hypervisors, err
+	return h, err
 }
 
 type HypervisorResult struct {
