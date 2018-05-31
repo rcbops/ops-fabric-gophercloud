@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -52,7 +53,8 @@ func (r Result) ExtractInto(to interface{}) error {
 		}
 		return json.NewDecoder(reader).Decode(to)
 	}
-
+	log.Println("Extracting the following result body")
+	log.Println(r.Body)
 	b, err := json.Marshal(r.Body)
 	if err != nil {
 		return err
