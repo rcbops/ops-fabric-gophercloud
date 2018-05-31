@@ -55,10 +55,17 @@ func (r Result) ExtractInto(to interface{}) error {
 	}
 	fmt.Fprintln(os.Stderr, "Extracting a result body")
 	b, err := json.Marshal(r.Body)
+	fmt.Fprintln(os.Stderr, "Body Marshalled")
 	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error in marshal")
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 	err = json.Unmarshal(b, to)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error in unmarshal")
+		fmt.Fprintln(os.Stderr, err)
+	}
 
 	return err
 }
