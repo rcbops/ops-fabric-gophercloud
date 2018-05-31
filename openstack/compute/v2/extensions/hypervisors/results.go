@@ -133,9 +133,20 @@ func (r *Hypervisor) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("CPUInfo has unexpected type: %T", t)
 	}
 
-	err = json.Unmarshal(tmpb, &r.CPUInfo)
-	if err != nil {
-		return err
+	// Some hypervisor types don't have CPU info, like ironic "hypervisors"
+	// which are just there to make ironic driver compatible with the nova
+	// resource model, help with scheduling, etc. In these cases, cpu_info may
+	// be set to an empty string.
+	if len(tmpb) > 0 {
+		// TODO Before upstreaming, figure out a better way to model this for
+		// the general case. CPUInfo will just likely have to be an arbitrary
+		// map. If something like "topology" is there maybe also make that a
+		// map.
+		// Additionally, just ignore unmarshalling errors here if this fails.
+		// According to API docs, the content of this field is hypervisor
+		// specific, so we can't even predict whether the CPUInfo fields will
+		// match the CPUInfo type here.
+		_ = json.Unmarshal(tmpb, &r.CPUInfo)
 	}
 
 	// These fields may be returned as a scientific notation, so they need
