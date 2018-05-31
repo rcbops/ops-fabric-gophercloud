@@ -9,6 +9,24 @@ import (
 	"github.com/gophercloud/gophercloud/pagination"
 )
 
+// Extract interprets any hypervisorResult as a Hypervisor, if possible
+func (r HypervisorResult) Extract() (*Hypervisor, error) {
+	fmt.Fprintln(os.Stderr, "Extracting HypervisorResult into a Hypervisor")
+	var h Hypervisor
+	err := r.ExtractInto(&h)
+	return &h, err
+}
+
+func (r HypervisorResult) ExtractInto(v interface{}) error {
+	fmt.Fprintln(os.Stderr, "Extracting into struct ptr")
+	return r.Result.ExtractIntoStructPtr(v, "hypervisor")
+}
+
+func ExtractHypervisorsInto(r pagination.Page, v interface{}) error {
+	fmt.Fprintln(os.Stderr, "Extracting into slice ptr")
+	return r.(HypervisorPage).Result.ExtractIntoSlicePtr(v, "hypervisors")
+}
+
 // Topology represents a CPU Topology.
 type Topology struct {
 	Sockets int `json:"sockets"`
@@ -101,6 +119,8 @@ type Hypervisor struct {
 }
 
 func (r *Hypervisor) UnmarshalJSON(b []byte) error {
+	fmt.Fprintln(os.Stderr, "calling Hypervisor.UnmarshalJSON")
+
 	type tmp Hypervisor
 	var s struct {
 		tmp
@@ -206,22 +226,12 @@ func ExtractHypervisors(p pagination.Page) ([]Hypervisor, error) {
 	fmt.Fprintln(os.Stderr, "Extracting a page of hypervisors...")
 	fmt.Fprintln(os.Stderr, "The page:")
 	fmt.Fprintln(os.Stderr, p)
-	err := (p.(HypervisorPage)).ExtractInto(&h)
+	err := ExtractHypervisorsInto(p, &h)
 	return h.Hypervisors, err
 }
 
 type HypervisorResult struct {
 	gophercloud.Result
-}
-
-// Extract interprets any HypervisorResult as a Hypervisor, if possible.
-func (r HypervisorResult) Extract() (*Hypervisor, error) {
-	var s struct {
-		Hypervisor Hypervisor `json:"hypervisor"`
-	}
-	fmt.Fprintln(os.Stderr, "Extracting HypervisorResult into a Hypervisor")
-	err := r.ExtractInto(&s)
-	return &s.Hypervisor, err
 }
 
 // Statistics represents a summary statistics for all enabled
