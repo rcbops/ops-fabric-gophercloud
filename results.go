@@ -65,8 +65,8 @@ func (r Result) ExtractInto(to interface{}) error {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error in unmarshal")
 		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln("Body i'm trying to marshal:")
-		fmt.Fprintln(b)
+		fmt.Fprintln(os.Stderr, "Body i'm trying to marshal:")
+		fmt.Fprintln(os.Stderr, b)
 	}
 
 	return err
