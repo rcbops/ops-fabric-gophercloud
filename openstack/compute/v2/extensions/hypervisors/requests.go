@@ -1,7 +1,7 @@
 package hypervisors
 
 import (
-	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/gophercloud/gophercloud"
@@ -13,10 +13,10 @@ import (
 // func(r PageResult) Page. Look at how createPage is implemented in places
 // where it works properly...
 func List(client *gophercloud.ServiceClient) pagination.Pager {
-	fmt.Println("Listing hypervisors...")
+	os.Stderr.WriteString("Listing hypervisors...")
 	return pagination.NewPager(client, hypervisorsListDetailURL(client), func(r pagination.PageResult) pagination.Page {
-		fmt.Println("Constructing a hypervisor page from this pagination.PageResult:")
-		fmt.Println(r)
+		os.Stderr.WriteString("Constructing a hypervisor page from this pagination.PageResult:")
+		os.Stderr.WriteString(r)
 		return HypervisorPage{pagination.LinkedPageBase{PageResult: r}}
 	})
 }

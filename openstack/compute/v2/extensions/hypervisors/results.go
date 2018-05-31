@@ -3,6 +3,7 @@ package hypervisors
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/pagination"
@@ -190,10 +191,10 @@ func (r HypervisorPage) NextPageURL() (string, error) {
 	}
 	err := r.ExtractInto(&s)
 	if err != nil {
-		fmt.Println("No next link found")
+		os.Stderr.WriteString("No next link found")
 		return "", err
 	}
-	fmt.Println("Extracting next URL...")
+	os.Stderr.WriteString("Extracting next URL...")
 	return gophercloud.ExtractNextURL(s.Links)
 }
 
@@ -202,7 +203,7 @@ func ExtractHypervisors(p pagination.Page) ([]Hypervisor, error) {
 	var h struct {
 		Hypervisors []Hypervisor `json:"hypervisors"`
 	}
-	fmt.Println("Extracting a page of hypervisors...")
+	os.Stderr.WriteString("Extracting a page of hypervisors...")
 	err := (p.(HypervisorPage)).ExtractInto(&h)
 	return h.Hypervisors, err
 }
@@ -216,7 +217,7 @@ func (r HypervisorResult) Extract() (*Hypervisor, error) {
 	var s struct {
 		Hypervisor Hypervisor `json:"hypervisor"`
 	}
-	fmt.Println("Extracting HypervisorResult into a Hypervisor")
+	os.Stderr.WriteString("Extracting HypervisorResult into a Hypervisor")
 	err := r.ExtractInto(&s)
 	return &s.Hypervisor, err
 }
@@ -270,7 +271,7 @@ func (r StatisticsResult) Extract() (*Statistics, error) {
 	var s struct {
 		Stats Statistics `json:"hypervisor_statistics"`
 	}
-	fmt.Println("Extracting a statistic result")
+	os.Stderr.WriteString("Extracting a statistic result")
 	err := r.ExtractInto(&s)
 	return &s.Stats, err
 }
@@ -303,7 +304,7 @@ func (r UptimeResult) Extract() (*Uptime, error) {
 	var s struct {
 		Uptime Uptime `json:"hypervisor"`
 	}
-	fmt.Println("Extracting an UptimeResult")
+	os.Stderr.WriteString("Extracting an UptimeResult")
 	err := r.ExtractInto(&s)
 	return &s.Uptime, err
 }
